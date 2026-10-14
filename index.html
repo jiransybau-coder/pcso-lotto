@@ -669,7 +669,7 @@ const LIVE={"658":{"asOf":"Oct 13, 2026","jackpot":392060109.64,"draws":[["2026-
 // ======================================
 function applyResults(all){Object.keys(all||{}).forEach(id=>{const d=all[id],g=GAMES[id];if(!g||!d)return;
 if(id==='658'&&d.jackpot){NEXT.jackpot=d.jackpot;if(d.asOf)NEXT.asOf=d.asOf}
-(d.draws||[]).forEach(x=>{if(x[0]>g.draws[g.draws.length-1][0])g.draws.push(x)});
+(d.draws||[]).forEach(x=>{const last=g.draws[g.draws.length-1];if(x[0]>last[0])g.draws.push(x);else{const e=g.draws.find(y=>y[0]===x[0]);if(e&&e[3]==null&&x[3]!=null)e[3]=x[3]}});
 if(g===GAME){calc();fillDates();buildStats();showJackpot();showLast();renderTabs()}})}
 applyResults(LIVE);
 fetch('results.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{if(!d)return;applyResults(d.draws||d.jackpot?{'658':d}:d)}).catch(()=>{});
